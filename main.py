@@ -56,7 +56,7 @@ class Game:
             for x in range(20):
                 self.cats.append(Cat(win, x, y))
 
-        boxes = [Box(win, 3, 3), Box(win, 2, 3)]
+        boxes = [Box(win, 0, 0), Box(win, 1, 0)]
 
         # In game data
         run = True

@@ -17,10 +17,13 @@ class Cat:
 
     @property
     def image(self):
-        return pygame.image.load(
-            os.path.join(
-                "Assets", f"Cat_{self}.png"
-            )
+        return pygame.transform.scale(
+            pygame.image.load(
+                os.path.join(
+                    "Assets", f"Cat_{self}.png"
+                )
+            ),
+            (64, 64)
         )
 
 
@@ -29,7 +32,7 @@ class Cat:
 
 
     def draw(self):
-        self.win.blit(self.image, (self.x*64, self.y*64*2))
+        self.win.blit(self.image, (self.x*64, self.y*64))
 
     
     def move(self):
