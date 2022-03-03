@@ -9,4 +9,4 @@ class Box:
         self.y = y
 
     def draw(self):
-        self.win.blit(BOX, (self.x*128, self.y*128))
+        self.win.blit(BOX, (self.x*64, self.y*64))

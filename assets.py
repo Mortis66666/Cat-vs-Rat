@@ -10,4 +10,7 @@ def load(image: str):
 
 
 BG = load("Bg")
-BOX = load("Box")
+BOX = pygame.transform.scale(
+    load("Box"),
+    (64, 64)
+)
