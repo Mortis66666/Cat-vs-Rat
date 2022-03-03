@@ -1,9 +1,11 @@
-import random
 import pygame
-from cat import Cat
-from rat import Rat
-from box import Box
+import random
+from sprites.cat import Cat
+from sprites.rat import Rat
+from sprites.box import Box
 from assets import BG
+
+
 pygame.init()
 
 
@@ -22,19 +24,18 @@ class Game:
 
     cats: list[Cat] = []
     rats: list[Rat] = []
+    boxes: list[Box] = []
 
-    def draw(self, boxes): # the draw function
+    def draw(self): # the draw function
         self.draw_background()
+        self.extra_draw()
 
-        lst = self.cats + self.rats
+        lst = self.cats + self.rats + self.boxes
 
         random.shuffle(lst)
 
         for object in lst:
             object.draw()
-
-        for box in boxes:
-            box.draw()
 
         pygame.display.update()
 
@@ -43,20 +44,20 @@ class Game:
             for y in range(5):
                 win.blit(BG, (x*256, y*128))
 
-    def handle(self):
+    def extra_draw(self):
+        pass
+
+    def handle_key(self):
         lst = self.cats + self.rats
         random.shuffle(lst)
 
         for object in lst:
             object.handle()
 
+    def handle_click(self):
+        pass
+
     def start(self):
-
-        for y in range(10):
-            for x in range(20):
-                self.cats.append(Cat(win, x, y))
-
-        boxes = [Box(win, 0, 0), Box(win, 1, 0)]
 
         # In game data
         run = True
@@ -73,10 +74,13 @@ class Game:
                     pygame.quit()
                 
                 elif event.type == pygame.KEYDOWN:
-                    self.handle()
+                    self.handle_key()
+
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handle_click()
 
             if run:
-                self.draw(boxes)
+                self.draw()
 
 
 
