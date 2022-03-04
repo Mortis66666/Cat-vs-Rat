@@ -1,5 +1,6 @@
 import pygame
 from enums import direction
+from abc import abstractproperty
 
 
 class BaseSprite:
@@ -10,6 +11,12 @@ class BaseSprite:
         self.y = y
 
         self.facing = direction.DOWN
+
+
+    @abstractproperty
+    @property
+    def image(self):
+        pass
 
 
     def __str__(self):
