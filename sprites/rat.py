@@ -1,6 +1,6 @@
 import pygame
-import os
 from .base_sprite import BaseSprite
+from utils.assets import load
 
 
 class Rat(BaseSprite):
@@ -13,10 +13,8 @@ class Rat(BaseSprite):
     @property
     def image(self):
         return pygame.transform.scale(
-            pygame.image.load(
-                os.path.join(
-                    "Assets", f"Mouse_{self}.png"
-                )
+            load(
+                f"Mouse_{self}"
             ),
             (64, 64)
         )

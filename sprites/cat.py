@@ -1,6 +1,7 @@
 import pygame
 import os
 from .base_sprite import BaseSprite
+from utils.assets import load
 
 
 class Cat(BaseSprite):
@@ -12,10 +13,8 @@ class Cat(BaseSprite):
     @property
     def image(self):
         return pygame.transform.scale(
-            pygame.image.load(
-                os.path.join(
-                    "Assets", f"Cat_{self}.png"
-                )
+            load(
+                f"Cat_{self}"
             ),
             (64, 64)
         )

@@ -1,5 +1,5 @@
 import pygame
-from enums import direction
+from utils.enums import direction
 from abc import abstractproperty
 
 

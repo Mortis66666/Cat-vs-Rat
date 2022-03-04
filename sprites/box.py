@@ -1,4 +1,4 @@
-from assets import BOX
+from utils.assets import BOX
 import pygame
 
 class Box:

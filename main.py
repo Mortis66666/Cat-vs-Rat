@@ -2,7 +2,7 @@ import pygame
 import random
 import json
 from sprites import Cat, Rat, Box
-from assets import BG
+from utils.assets import BG
 
 
 pygame.init()
