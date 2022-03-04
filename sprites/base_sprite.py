@@ -1,17 +1,17 @@
 import pygame
-from utils.enums import direction
+from utils.enums import direction, sprite
 from abc import abstractproperty
 
 
 class BaseSprite:
 
-    def __init__(self, win: pygame.Surface, x: int, y: int):
+    def __init__(self, win: pygame.Surface, x: int, y: int, _type=sprite.CAT):
         self.win = win
         self.x = x
         self.y = y
 
         self.facing = direction.DOWN
-
+        self._type = _type
 
     @abstractproperty
     @property
@@ -47,14 +47,29 @@ class BaseSprite:
 
         pressed = pygame.key.get_pressed()
 
-        if pressed[pygame.K_UP]:
-            self.facing = direction.UP 
+        if self._type == sprite.CAT:
 
-        elif pressed[pygame.K_DOWN]:
-            self.facing = direction.DOWN
+            if pressed[pygame.K_UP]:
+                self.facing = direction.UP 
 
-        elif pressed[pygame.K_LEFT]:
-            self.facing = direction.LEFT
+            elif pressed[pygame.K_DOWN]:
+                self.facing = direction.DOWN
 
-        elif pressed[pygame.K_RIGHT]:
-            self.facing = direction.RIGHT
+            elif pressed[pygame.K_LEFT]:
+                self.facing = direction.LEFT
+
+            elif pressed[pygame.K_RIGHT]:
+                self.facing = direction.RIGHT
+
+        else:
+            if pressed[pygame.K_w]:
+                self.facing = direction.UP 
+
+            elif pressed[pygame.K_s]:
+                self.facing = direction.DOWN
+
+            elif pressed[pygame.K_a]:
+                self.facing = direction.LEFT
+
+            elif pressed[pygame.K_d]:
+                self.facing = direction.RIGHT

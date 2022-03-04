@@ -1,12 +1,13 @@
 import pygame
 from .base_sprite import BaseSprite
 from utils.assets import load
+from utils.enums import sprite
 
 
 class Rat(BaseSprite):
 
     def __init__(self, win: pygame.Surface, x, y):
-        super().__init__(win, x, y)
+        super().__init__(win, x, y, sprite.RAT)
         self.alive = True
 
 
