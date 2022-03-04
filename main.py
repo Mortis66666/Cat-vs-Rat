@@ -1,8 +1,7 @@
 import pygame
 import random
-from sprites.cat import Cat
-from sprites.rat import Rat
-from sprites.box import Box
+import json
+from sprites import Cat, Rat, Box
 from assets import BG
 
 
@@ -22,9 +21,22 @@ BLACK = (0, 0, 0)
 
 class Game:
 
-    cats: list[Cat] = []
-    rats: list[Rat] = []
-    boxes: list[Box] = []
+    def __init__(self):
+
+        self.cats = [
+            Cat(win, x, y)
+            for x, y in self.load("cats")
+        ]
+
+        self.rats = [
+            Rat(win, x, y)
+            for x, y in self.load("rats")
+        ]
+
+        self.boxes = [
+            Box(win, x, y)
+            for x, y in self.load("boxes")
+        ]
 
     def draw(self): # the draw function
         self.draw_background()
@@ -56,6 +68,13 @@ class Game:
 
     def handle_click(self):
         pass
+
+    def load(self, name: str):
+
+        with open("map.json", "r") as file:
+            data = json.load(file)
+
+        return data[name.title()]
 
     def start(self):
 
