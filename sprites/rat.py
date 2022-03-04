@@ -7,6 +7,7 @@ class Rat(BaseSprite):
 
     def __init__(self, win: pygame.Surface, x, y):
         super().__init__(win, x, y)
+        self.alive = True
 
 
     @property
@@ -19,3 +20,6 @@ class Rat(BaseSprite):
             ),
             (64, 64)
         )
+
+    def __str__(self):
+        return super().__str__() if self.alive else "Dead"
