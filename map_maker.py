@@ -28,23 +28,8 @@ class Selected:
 class Maker(Game):
 
     selected: Selected | None = None
+    occupied = []
 
-    def __init__(self):
-
-        self.cats = [
-            Cat(win, x, y)
-            for x, y in self.load("cats")
-        ]
-
-        self.rats = [
-            Rat(win, x, y)
-            for x, y in self.load("rats")
-        ]
-
-        self.boxes = [
-            Box(win, x, y)
-            for x, y in self.load("boxes")
-        ]
 
     def extra_draw(self):
         if self.selected:
@@ -55,17 +40,22 @@ class Maker(Game):
         self.selected = Selected(win, x//64, y//64)
 
     def handle_key(self):
+        if not self.selected:
+            return
         pressed = pygame.key.get_pressed()
         x, y = self.selected.x, self.selected.y
 
-        if pressed[pygame.K_b]:
+        if pressed[pygame.K_b] and (x, y) not in self.occupied:
             self.boxes.append(Box(win, x, y))
+            self.occupied.append((x, y))
 
-        elif pressed[pygame.K_c]:
+        elif pressed[pygame.K_c] and (x, y) not in self.occupied:
             self.cats.append(Cat(win, x, y))
+            self.occupied.append((x, y))
 
-        elif pressed[pygame.K_r]:
+        elif pressed[pygame.K_r] and (x, y) not in self.occupied:
             self.rats.append(Rat(win, x, y))
+            self.occupied.append((x, y))
 
         elif pressed[pygame.K_d] or pressed[pygame.K_BACKSPACE] or pressed[pygame.K_DELETE]:
             for obj in self.cats:
@@ -78,14 +68,46 @@ class Maker(Game):
                 if (obj.x, obj.y) == (x, y):
                     self.boxes.remove(obj)
 
+            try:
+                self.occupied.remove((x, y))
+            except:
+                pass
+
+        elif (pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]) and pressed[pygame.K_s]:
+            self.save()
+
+    def unique(self, seq: list):
+        res = []
+        for pos in seq:
+            if pos not in res:
+                res.append(pos)
+
+        return res
 
 
-    def load(self, name: str):
-
-        with open("map.json", "r") as file:
-            data = json.load(file)
-
-        return data[name.title()]
+    def save(self):
+        with open("map.json", "w") as file:
+            json.dump(
+                {
+                    "Boxes": [
+                        [
+                            box.x, box.y
+                        ] for box in self.unique(self.boxes)
+                    ],
+                    "Cats": [
+                        [
+                            cat.x, cat.y
+                        ] for cat in self.unique(self.cats)
+                    ],
+                    "Rats": [
+                        [
+                            rat.x, rat.y
+                        ] for rat in self.unique(self.rats)
+                    ]
+                },
+                file,
+                indent=4
+            )
 
 
 if __name__ == "__main__":
