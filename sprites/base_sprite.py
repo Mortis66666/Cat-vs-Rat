@@ -2,16 +2,16 @@ import pygame
 from utils.enums import direction, sprite
 from abc import abstractproperty
 
-
 class BaseSprite:
 
-    def __init__(self, win: pygame.Surface, x: int, y: int, _type=sprite.CAT):
+    def __init__(self, win: pygame.Surface, x: int, y: int, _type: sprite=sprite.CAT):
         self.win = win
         self.x = x
         self.y = y
 
         self.facing = direction.DOWN
         self._type = _type
+
 
     @abstractproperty
     @property
@@ -27,21 +27,34 @@ class BaseSprite:
         self.win.blit(self.image, (self.x*64, self.y*64))
 
     
-    def move(self):
+    def move(self, obstacles):
+
+        n = 0.2 * self._type.value
+
+
+        max_up = self.y
+        max_down = 9 - self.y
+        max_left = self.x
+        max_right = 19 - self.x
+
+        for obs in obstacles:
+            pass
+            # TODO Obstacles collider
+
 
         match self.facing:
 
             case direction.UP:
-                self.y -= 1
+                self.y -= min(n, max_up)
 
             case direction.DOWN:
-                self.y += 1
+                self.y += min(n, max_down)
 
             case direction.LEFT:
-                self.x -= 1
+                self.x -= min(n, max_left)
 
             case direction.RIGHT:
-                self.x += 1
+                self.x += min(n, max_right)
     
     def handle(self):
 
