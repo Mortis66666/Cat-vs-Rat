@@ -1,5 +1,4 @@
 import pygame
-import os
 from .base_sprite import BaseSprite
 from utils.assets import load
 

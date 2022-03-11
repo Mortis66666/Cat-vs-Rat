@@ -2,7 +2,10 @@ import pygame
 import random
 import json
 from sprites import Cat, Rat, Box
+from sprites.base_sprite import BaseSprite
 from utils.assets import BG
+from abc import abstractmethod
+from utils.enums import sprite
 
 
 pygame.init()
@@ -38,13 +41,24 @@ class Game:
             for x, y in self.load("boxes")
         ]
 
+
+    def obstacles(self, *, cat=False) -> list[BaseSprite]:
+        return [
+            (box.x, box.y)
+            for box in self.boxes
+        ] + (
+                [
+                    (rat.x, rat.y)
+                    for rat in self.rats
+                    if not rat.alive
+                ] if cat else []
+            )
+
     def draw(self): # the draw function
         self.draw_background()
         self.extra_draw()
 
         lst = self.cats + self.rats + self.boxes
-
-        random.shuffle(lst)
 
         for object in lst:
             object.draw()
@@ -66,6 +80,37 @@ class Game:
         for object in lst:
             object.handle()
 
+
+    def handle(self):
+        pressed = pygame.key.get_pressed()
+
+        cat = False
+        rat = False
+
+        if any((pressed[pygame.K_UP], pressed[pygame.K_DOWN], pressed[pygame.K_LEFT], pressed[pygame.K_RIGHT])):
+            cat = True
+
+        if any((pressed[pygame.K_w], pressed[pygame.K_s], pressed[pygame.K_a], pressed[pygame.K_d])):
+            rat = True
+
+        lst: list[BaseSprite] = []
+
+        if cat:
+            lst.extend(self.cats)
+
+        if rat:
+            lst.extend(self.rats)
+
+        random.shuffle(lst)
+
+        for obj in lst:
+            if obj._type == sprite.RAT:
+                obj.move(self.obstacles())
+            else:
+                obj.move(self.obstacles(cat=True))
+
+
+    @abstractmethod
     def handle_click(self):
         pass
 
@@ -99,6 +144,7 @@ class Game:
                     self.handle_click()
 
             if run:
+                self.handle()
                 self.draw()
 
 
