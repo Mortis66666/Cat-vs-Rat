@@ -37,9 +37,19 @@ class BaseSprite:
         max_left = self.x
         max_right = 19 - self.x
 
-        for obs in obstacles:
-            pass
-            # TODO Obstacles collider
+        for x, y in obstacles:
+            
+            if abs(y - self.y) < 1:
+                if x < self.x: # Left
+                    max_left = min((self.x - (x+1)), max_left)
+                elif x > self.x: # Right
+                    max_right = min(((x-1) - self.x), max_right)
+
+            if abs(x - self.x) < 1:
+                if y < self.y: # Up
+                    max_up = min((self.y - (y+1)), max_up)
+                elif y > self.y: # Down
+                    max_down = min(((y-1) - self.y), max_down)
 
 
         match self.facing:
