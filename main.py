@@ -1,6 +1,7 @@
 import pygame
 import random
 import json
+import time
 from sprites import Cat, Rat, Box
 from sprites.base_sprite import BaseSprite
 from utils.assets import BG
@@ -41,6 +42,8 @@ class Game:
             for x, y in self.load("boxes")
         ]
 
+        self.last_update = 0
+
 
     def obstacles(self, *, cat=False) -> list[BaseSprite]:
         return [
@@ -48,10 +51,12 @@ class Game:
             for box in self.boxes
         ] + (
                 [
-                    (rat.x, rat.y)
-                    for rat in self.rats
-                    if not rat.alive
-                ] if cat else []
+                    (obj.x, obj.y)
+                    for obj in (self.rats + self.cats)
+                ] if not cat else [
+                    (obj.x, obj.y)
+                    for obj in self.cats
+                ]
             )
 
     def draw(self): # the draw function
@@ -103,11 +108,15 @@ class Game:
 
         random.shuffle(lst)
 
-        for obj in lst:
-            if obj._type == sprite.RAT:
-                obj.move(self.obstacles())
-            else:
-                obj.move(self.obstacles(cat=True))
+        now = time.time()
+
+        if now - 0.05 > self.last_update:
+            for obj in lst:
+                if obj._type == sprite.RAT:
+                    obj.move(self.obstacles())
+                else:
+                    obj.move(self.obstacles(cat=True))
+            self.last_update = now
 
 
     @abstractmethod
