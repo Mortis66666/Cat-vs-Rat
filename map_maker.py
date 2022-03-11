@@ -84,6 +84,9 @@ class Maker(Game):
 
         return res
 
+    def handle(self):
+        pass
+
 
     def save(self):
         with open("map.json", "w") as file:
