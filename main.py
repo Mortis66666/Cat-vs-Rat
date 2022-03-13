@@ -113,10 +113,14 @@ class Game:
         if now - 0.05 > self.last_update:
             for obj in lst:
                 if obj._type == sprite.RAT:
-                    obj.move(self.obstacles())
+                    if obj.alive:
+                        obj.move(self.obstacles())
                 else:
                     obj.move(self.obstacles(cat=True))
             self.last_update = now
+
+        for cat in self.cats:
+            cat.eat(self.rats)
 
 
     @abstractmethod

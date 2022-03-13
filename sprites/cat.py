@@ -17,3 +17,9 @@ class Cat(BaseSprite):
             ),
             (64, 64)
         )
+
+    def eat(self, rats: list[BaseSprite]):
+
+        for rat in rats:
+            if abs(rat.x - self.x) < 0.5 and abs(rat.y - self.y) < 0.5:
+                rat.kill()
