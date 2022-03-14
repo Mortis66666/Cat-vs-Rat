@@ -26,21 +26,21 @@ BLACK = (0, 0, 0)
 
 class Game:
 
-    def __init__(self):
+    def __init__(self, f=map_name):
 
         self.cats = [
             Cat(win, x, y)
-            for x, y in self.load("cats")
+            for x, y in self.load("cats", f)
         ]
 
         self.rats = [
             Rat(win, x, y)
-            for x, y in self.load("rats")
+            for x, y in self.load("rats", f)
         ]
 
         self.boxes = [
             Box(win, x, y)
-            for x, y in self.load("boxes")
+            for x, y in self.load("boxes", f)
         ]
 
         self.last_update = 0
@@ -128,9 +128,9 @@ class Game:
     def handle_click(self):
         pass
 
-    def load(self, name: str):
+    def load(self, name: str, f=map_name):
 
-        with open(map_name, "r") as file:
+        with open(f, "r") as file:
             data = json.load(file)
 
         return data[name.title()]

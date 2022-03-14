@@ -2,11 +2,12 @@ from main import Game, Cat, Rat, Box, win
 from utils import map_name
 import pygame
 import json
+import os
 
 
 
 RED = (255, 0, 0)
-
+font = pygame.font.SysFont("comicsans", 50)
 
 class Selected:
 
@@ -26,10 +27,68 @@ class Selected:
         )
 
 
+class Choose:
+
+    choice = 0
+
+    def draw(self):
+        
+        word = font.render("Choose a map id to edit", True, "black")
+
+        win.fill((255, 255, 255))
+        win.blit(word, (win.get_width()//2 - word.get_width()//2, win.get_height()//2 - word.get_height()//2))
+
+        pygame.display.update()
+
+    def next_index(self):
+        return int(os.listdir("maps")[-1].split(".")[0].split("_")[-1]) + 1
+
+    def start(self):
+
+        fps = 60
+        clock = pygame.time.Clock()
+
+        while not self.choice:
+            clock.tick(fps)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.choice = -69
+
+                elif event.type == pygame.KEYDOWN:
+                    c = pygame.key.name(event.key)
+                    if c.isdigit():
+                        self.choice = int(c)
+
+                    else:
+                        pressed = pygame.key.get_pressed()
+
+                        if (pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]) and pressed[pygame.K_n]:
+                            index = self.next_index()
+                            
+                            with open(f"maps/map_{index}.json", "w") as file:
+                                json.dump(
+                                    {
+                                        "Boxes": [],
+                                        "Cats": [],
+                                        "Rats": []
+                                    },
+                                    file
+                                )
+
+                            self.choice = index
+
+                else:
+                    self.draw()
+
 class Maker(Game):
 
     selected: Selected | None = None
     occupied = []
+
+    def __init__(self, map_id, /):
+        self.map_id = map_id
+        super().__init__(f"maps/map_{map_id}.json")
 
 
     def extra_draw(self):
@@ -115,5 +174,14 @@ class Maker(Game):
 
 
 if __name__ == "__main__":
-    maker = Maker()
-    maker.start()
+    choose = Choose()
+    choose.start()
+
+    choice = choose.choice
+
+    if choice != -69:
+        maker = Maker(choice)
+        maker.start()
+
+    else:
+        pygame.quit()
