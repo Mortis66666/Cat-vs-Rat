@@ -149,7 +149,7 @@ class Maker(Game):
 
 
     def save(self):
-        with open(map_name, "w") as file:
+        with open(f"maps/map_{self.map_id}.json", "w") as file:
             json.dump(
                 {
                     "Boxes": [
