@@ -5,8 +5,9 @@ import time
 from sprites import Cat, Rat, Box
 from sprites.base_sprite import BaseSprite
 from utils.assets import BG
-from abc import abstractmethod
 from utils.enums import sprite
+from utils import map_name
+from abc import abstractmethod
 
 
 pygame.init()
@@ -129,7 +130,7 @@ class Game:
 
     def load(self, name: str):
 
-        with open("map.json", "r") as file:
+        with open(map_name, "r") as file:
             data = json.load(file)
 
         return data[name.title()]

@@ -1,4 +1,5 @@
 from main import Game, Cat, Rat, Box, win
+from utils import map_name
 import pygame
 import json
 
@@ -89,7 +90,7 @@ class Maker(Game):
 
 
     def save(self):
-        with open("map.json", "w") as file:
+        with open(map_name, "w") as file:
             json.dump(
                 {
                     "Boxes": [
