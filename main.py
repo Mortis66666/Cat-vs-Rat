@@ -53,7 +53,7 @@ class Game:
         ] + (
                 [
                     (obj.x, obj.y)
-                    for obj in (self.rats + self.cats)
+                    for obj in self.rats
                 ] if not cat else [
                     (obj.x, obj.y)
                     for obj in self.cats

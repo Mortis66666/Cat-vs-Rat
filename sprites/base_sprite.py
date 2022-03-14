@@ -29,7 +29,7 @@ class BaseSprite:
     
     def move(self, obstacles):
 
-        n = 0.2 * self._type.value
+        n = 0.2 if self._type == sprite.CAT else 0.5
 
 
         max_up = self.y
@@ -41,15 +41,15 @@ class BaseSprite:
             
             if abs(y - self.y) < 0.7:
                 if x < self.x: # Left
-                    max_left = min((self.x - (x+1)), max_left)
+                    max_left = min(max(self.x - (x+1), 0), max_left)
                 elif x > self.x: # Right
-                    max_right = min(((x-1) - self.x), max_right)
+                    max_right = min(max((x-1) - self.x, 0), max_right)
 
             if abs(x - self.x) < 0.7:
                 if y < self.y: # Up
-                    max_up = min((self.y - (y+1)), max_up)
+                    max_up = min(max(self.y - (y+1), 0), max_up)
                 elif y > self.y: # Down
-                    max_down = min(((y-1) - self.y), max_down)
+                    max_down = min(max((y-1) - self.y, 0), max_down)
 
 
         match self.facing:
