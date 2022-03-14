@@ -1,4 +1,11 @@
+# For testing
 /test.py
+
+# Annoying pycache
 /__pycache__
 /sprites/__pycache__
 /utils/__pycache__
+
+# Local json data
+/maps/**.json
+settings.json
