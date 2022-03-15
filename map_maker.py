@@ -87,7 +87,6 @@ class Choose:
         clock = pygame.time.Clock()
         run = True
 
-        map_id = ""
 
         pygame.display.set_caption("Choose a map")
 
@@ -143,6 +142,7 @@ class Maker(Game):
 
     def __init__(self, map_id, /):
         self.map_id = map_id
+        self.history = []
         super().__init__(f"maps/map_{map_id}.json")
         
         pygame.display.set_caption(f"map_{map_id}")
