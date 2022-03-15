@@ -17,7 +17,7 @@ class Coundown:
             for y in range(5):
                 self.win.blit(BG, (x*256, y*128))
 
-    def draw(self, n: int):
+    def draw(self, n):
         self.draw_background()
 
         num = font.render(str(n), True, "black")
@@ -37,5 +37,8 @@ class Coundown:
         pygame.mixer.music.load(load_music("countdown"))
         pygame.mixer.music.play()
         for i in range(3, -1, -1):
-            self.draw(i)
+            if i:
+                self.draw(i)
+            else:
+                self.draw("GO!")
             time.sleep(1)

@@ -32,17 +32,17 @@ class Game:
 
         self.cats = [
             Cat(win, x, y)
-            for x, y in self.load("cats", f)
+            for x, y in self.load("cats")
         ]
 
         self.rats = [
             Rat(win, x, y)
-            for x, y in self.load("rats", f)
+            for x, y in self.load("rats")
         ]
 
         self.boxes = [
             Box(win, x, y)
-            for x, y in self.load("boxes", f)
+            for x, y in self.load("boxes")
         ]
 
         self.last_update = 0
