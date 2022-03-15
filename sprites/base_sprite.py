@@ -39,13 +39,13 @@ class BaseSprite:
 
         for x, y in obstacles:
             
-            if abs(y - self.y) < 0.7:
+            if abs(y - self.y) < 0.6:
                 if x < self.x: # Left
                     max_left = min(max(self.x - (x+1), 0), max_left)
                 elif x > self.x: # Right
                     max_right = min(max((x-1) - self.x, 0), max_right)
 
-            if abs(x - self.x) < 0.7:
+            if abs(x - self.x) < 0.6:
                 if y < self.y: # Up
                     max_up = min(max(self.y - (y+1), 0), max_up)
                 elif y > self.y: # Down
