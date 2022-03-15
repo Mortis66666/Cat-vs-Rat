@@ -2,6 +2,7 @@ import pygame
 import random
 import json
 import time
+
 from sprites import Cat, Rat, Box
 from sprites.base_sprite import BaseSprite
 from utils.enums import sprite
@@ -62,13 +63,13 @@ class Game:
 
     def draw(self): # the draw function
         self.draw_background()
-        self.extra_draw()
 
         lst = self.cats + self.rats + self.boxes
 
         for object in lst:
             object.draw()
 
+        self.extra_draw()
         pygame.display.update()
 
     def draw_background(self):
