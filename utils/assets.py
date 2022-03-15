@@ -8,6 +8,9 @@ def load(image: str):
         )
     )
 
+def load_music(music: str):
+    return os.path.join("Assets", music + ".mp3")
+
 
 BG = load("Bg")
 
@@ -24,3 +27,5 @@ ICON = pygame.transform.scale(
 TOOLBAR = load("UI_Toolbar")
 
 CURSOR = load("Cursor_Point")
+
+MUSIC = load_music("Music")

@@ -6,7 +6,7 @@ import time
 from sprites import Cat, Rat, Box
 from sprites.base_sprite import BaseSprite
 from utils.enums import sprite
-from utils import BG, ICON, map_name
+from utils import BG, ICON, MUSIC, map_name
 from abc import abstractmethod
 
 
@@ -147,6 +147,9 @@ class Game:
 
         clock = pygame.time.Clock()
         fps = 60 # Frame per second
+
+        pygame.mixer.music.load(MUSIC)
+        pygame.mixer.music.play(-1)
 
         while run:
             clock.tick(fps)
