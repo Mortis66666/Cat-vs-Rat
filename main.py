@@ -3,11 +3,12 @@ import random
 import json
 import time
 
+from abc import abstractmethod
 from sprites import Cat, Rat, Box
 from sprites.base_sprite import BaseSprite
+from utils.countdown import Coundown
 from utils.enums import sprite
 from utils import BG, ICON, MUSIC, map_name
-from abc import abstractmethod
 
 
 pygame.init()
@@ -171,6 +172,9 @@ class Game:
 
 
 def main():
+    countdown = Coundown(win)
+    countdown.start()
+
     game = Game()
     game.start()
 
