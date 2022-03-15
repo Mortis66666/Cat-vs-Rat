@@ -4,9 +4,8 @@ import json
 import time
 from sprites import Cat, Rat, Box
 from sprites.base_sprite import BaseSprite
-from utils.assets import BG
 from utils.enums import sprite
-from utils import map_name
+from utils import BG, ICON, map_name
 from abc import abstractmethod
 
 
@@ -16,6 +15,7 @@ pygame.init()
 width, height = 1280, 640
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Cat vs Rat")
+pygame.display.set_icon(ICON)
 
 
 # Colours
