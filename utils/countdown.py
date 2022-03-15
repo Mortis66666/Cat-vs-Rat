@@ -1,7 +1,7 @@
 import pygame
 import time
 
-from .assets import BG
+from .assets import BG, load_music
 
 pygame.init()
 
@@ -34,6 +34,8 @@ class Coundown:
 
 
     def start(self):
+        pygame.mixer.music.load(load_music("countdown"))
+        pygame.mixer.music.play()
         for i in range(3, -1, -1):
             self.draw(i)
             time.sleep(1)
