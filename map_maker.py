@@ -1,5 +1,5 @@
 from main import Game, Cat, Rat, Box, win
-from utils import map_name
+from utils import map_name, BG
 import pygame
 import json
 import os
@@ -27,7 +27,7 @@ class Selected:
         )
 
 
-class Choose(Game):
+class Choose:
 
     choice = 0
 
@@ -40,6 +40,11 @@ class Choose(Game):
 
         pygame.display.update()
 
+    def draw_background(self):
+        for x in range(5):
+            for y in range(5):
+                win.blit(BG, (x*256, y*128))
+
     def next_index(self):
         return int(os.listdir("maps")[-1].split(".")[0].split("_")[-1]) + 1
 
@@ -47,6 +52,8 @@ class Choose(Game):
 
         fps = 60
         clock = pygame.time.Clock()
+
+        pygame.display.set_caption("Choose a map")
 
         while not self.choice:
             clock.tick(fps)
@@ -89,6 +96,8 @@ class Maker(Game):
     def __init__(self, map_id, /):
         self.map_id = map_id
         super().__init__(f"maps/map_{map_id}.json")
+        
+        pygame.display.set_caption(f"map_{map_id}")
 
 
     def extra_draw(self):
@@ -109,13 +118,19 @@ class Maker(Game):
             self.boxes.append(Box(win, x, y))
             self.occupied.append((x, y))
 
+            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+
         elif pressed[pygame.K_c] and (x, y) not in self.occupied:
             self.cats.append(Cat(win, x, y))
             self.occupied.append((x, y))
 
+            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+
         elif pressed[pygame.K_r] and (x, y) not in self.occupied:
             self.rats.append(Rat(win, x, y))
             self.occupied.append((x, y))
+
+            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
 
         elif pressed[pygame.K_d] or pressed[pygame.K_BACKSPACE] or pressed[pygame.K_DELETE]:
             for obj in self.cats:
@@ -132,6 +147,8 @@ class Maker(Game):
                 self.occupied.remove((x, y))
             except:
                 pass
+
+            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
 
         elif (pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]) and pressed[pygame.K_s]:
             self.save()
@@ -171,6 +188,8 @@ class Maker(Game):
                 file,
                 indent=4
             )
+        pygame.display.set_caption(f"map_{self.map_id} · Saved")
+
 
 
 if __name__ == "__main__":
