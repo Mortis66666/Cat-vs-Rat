@@ -162,10 +162,10 @@ class Game:
                 self.draw()
 
 
-
-
+def main():
+    game = Game()
+    game.start()
 
 
 if __name__ == "__main__":
-    game = Game()
-    game.start()
+    main()

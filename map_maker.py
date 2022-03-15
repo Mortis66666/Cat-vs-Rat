@@ -239,8 +239,7 @@ class Maker(Game):
         pygame.display.set_caption(f"map_{self.map_id} · Saved")
 
 
-
-if __name__ == "__main__":
+def main():
     choose = Choose()
     choose.start()
 
@@ -252,3 +251,8 @@ if __name__ == "__main__":
 
     else:
         pygame.quit()
+
+
+
+if __name__ == "__main__":
+    main()
