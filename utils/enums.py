@@ -11,3 +11,7 @@ class sprite(Enum):
     CAT = 1
     RAT = 2
     BOX = 3
+
+class spiky(Enum):
+    ACTIVE = 1
+    INACTIVE = 2

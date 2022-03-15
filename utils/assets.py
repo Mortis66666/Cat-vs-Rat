@@ -13,19 +13,16 @@ def load_music(music: str):
 
 
 BG = load("Bg")
-
 BOX = pygame.transform.scale(
     load("Box"),
     (64, 64)
 )
-
+TOMATO = load("Tomato")
+HOLE = load("Hole")
 ICON = pygame.transform.scale(
     load("Cat_Avatar_Rounded"),
     (32, 32)
 )
-
 TOOLBAR = load("UI_Toolbar")
-
 CURSOR = load("Cursor_Point")
-
 MUSIC = load_music("Music")
