@@ -1,10 +1,37 @@
+
+""" Map Maker
+
+Use this file to make a map yourself!
+
+Controls
+--------
+Click    -    Select the area
+C key    -    Place a cat on the selected area
+R key    -    Place a rat on the selected area
+B key    -    Place a box on the selected area
+CTRL + S -    Save the map
+
+
+How to run?
+
+Type python map_maker.py in command line to run the code
+
+You can also do
+
+python map_maker.py --map <id>
+
+To instantly edit the map with the id you provide
+
+"""
+
 import random
 import pygame
 import json
 import os
+import argparse
 
 from main import Game, Cat, Rat, Box, win
-from utils import map_name, BG, TOOLBAR, CURSOR
+from utils import BG, TOOLBAR, CURSOR
 
 
 
@@ -244,10 +271,19 @@ class Maker(Game):
 
 
 def main():
-    choose = Choose()
-    choose.start()
 
-    choice = choose.choice
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--map", nargs="?", const=1, type=int, default=None)
+
+    args = parser.parse_args()
+
+    choice = args.map
+
+    if not choice:
+        choose = Choose()
+        choose.start()
+
+        choice = choose.choice
 
     if choice != -69:
         maker = Maker(choice)
