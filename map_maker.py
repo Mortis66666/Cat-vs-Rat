@@ -4,7 +4,7 @@ import json
 import os
 
 from main import Game, Cat, Rat, Box, win
-from utils import map_name, BG, TOOLBAR
+from utils import map_name, BG, TOOLBAR, CURSOR
 
 
 
@@ -146,11 +146,15 @@ class Maker(Game):
         super().__init__(f"maps/map_{map_id}.json")
         
         pygame.display.set_caption(f"map_{map_id}")
+        pygame.mouse.set_visible(False)
 
 
     def extra_draw(self):
         if self.selected:
             self.selected.draw()
+
+        pos = pygame.mouse.get_pos()
+        win.blit(CURSOR, pos)
 
     def handle_click(self):
         x, y = pygame.mouse.get_pos()

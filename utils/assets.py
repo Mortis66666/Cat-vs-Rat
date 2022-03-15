@@ -22,3 +22,8 @@ ICON = pygame.transform.scale(
 )
 
 TOOLBAR = load("UI_Toolbar")
+
+CURSOR = pygame.transform.scale(
+    load("Cursor_Point"),
+    (64, 64)
+)
