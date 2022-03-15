@@ -10,11 +10,15 @@ def load(image: str):
 
 
 BG = load("Bg")
+
 BOX = pygame.transform.scale(
     load("Box"),
     (64, 64)
 )
+
 ICON = pygame.transform.scale(
     load("Cat_Avatar_Rounded"),
     (32, 32)
 )
+
+TOOLBAR = load("UI_Toolbar")

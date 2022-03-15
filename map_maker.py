@@ -1,8 +1,10 @@
-from main import Game, Cat, Rat, Box, win
-from utils import map_name, BG
+import random
 import pygame
 import json
 import os
+
+from main import Game, Cat, Rat, Box, win
+from utils import map_name, BG, TOOLBAR
 
 
 
@@ -29,14 +31,34 @@ class Selected:
 
 class Choose:
 
-    choice = 0
+    choice = ""
+    submit = pygame.USEREVENT + 1
+
+    def __init__(self) -> None:
+        self.colors = [
+            self.color
+            for _ in range(3)
+        ]
+
+        while self.colors[0] == self.colors[1] or self.colors[0] == self.colors[2] or self.colors[2] == self.colors[1]:
+            self.colors = [
+                self.color
+                for _ in range(3)
+            ]
 
     def draw(self):
         
-        word = font.render("Choose a map id to edit", True, "black")
+        word = font.render("Type the map id", True, self.colors[0])
+        word2 = font.render("that you want to edit below", True, self.colors[1])
+        word3 = font.render("Press enter to submit", True, self.colors[2])
+        id = font.render(self.choice, True, "red")
 
         self.draw_background()
-        win.blit(word, (win.get_width()//2 - word.get_width()//2, win.get_height()//2 - word.get_height()//2))
+        win.blit(word, (win.get_width()//2 - word.get_width()//2, win.get_height()//2 - word.get_height()//2 - word2.get_height() - 100))
+        win.blit(word2, (win.get_width()//2 - word2.get_width()//2, win.get_height()//2 - word2.get_height()//2 - 100))
+        win.blit(TOOLBAR, (win.get_width()//2 - TOOLBAR.get_width()//2, win.get_height()//2 - TOOLBAR.get_height()//2 + 40))
+        win.blit(id, (win.get_width()//2 - TOOLBAR.get_width()//2 + 20, win.get_height()//2 - TOOLBAR.get_height()//2 + 40))
+        win.blit(word3, (win.get_width()//2 - word3.get_width()//2 + 20, win.get_height()//2 - TOOLBAR.get_height()//2 + 40 + word3.get_height()))
 
         pygame.display.update()
 
@@ -48,24 +70,45 @@ class Choose:
     def next_index(self):
         return int(os.listdir("maps")[-1].split(".")[0].split("_")[-1]) + 1
 
+    def post(self):
+        pygame.event.post(
+            pygame.event.Event(
+                self.submit
+            )
+        )
+
+    @property
+    def color(self):
+        return random.choice(("blue", "purple", "orange", "yellow", "green", "cyan"))
+
     def start(self):
 
         fps = 60
         clock = pygame.time.Clock()
+        run = True
+
+        map_id = ""
 
         pygame.display.set_caption("Choose a map")
 
-        while not self.choice:
+        while run:
             clock.tick(fps)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.choice = -69
+                    self.post()
 
                 elif event.type == pygame.KEYDOWN:
                     c = pygame.key.name(event.key)
                     if c.isdigit():
-                        self.choice = int(c)
+                        self.choice += c
+
+                    elif c == "backspace":
+                        self.choice = self.choice[:-1]
+
+                    elif c == "return":
+                        self.post()
 
                     else:
                         pressed = pygame.key.get_pressed()
@@ -84,6 +127,11 @@ class Choose:
                                 )
 
                             self.choice = index
+                            self.post()
+
+                elif event.type == self.submit:
+                    run = False
+                    self.choice = int(self.choice)
 
                 else:
                     self.draw()

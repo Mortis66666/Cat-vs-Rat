@@ -1,5 +1,5 @@
 import json
-from .assets import load, BG, ICON
+from .assets import load, BG, ICON, TOOLBAR
 from .enums import direction
 
 
