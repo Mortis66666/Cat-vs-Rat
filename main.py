@@ -124,6 +124,10 @@ class Game:
         for cat in self.cats:
             cat.eat(self.rats)
 
+        for rat in self.rats:
+            if not rat.alive and time.time() - rat.dead_time > rat.disappear_time:
+                self.rats.remove(rat)
+
 
     @abstractmethod
     def handle_click(self):
