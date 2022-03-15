@@ -7,7 +7,7 @@ import os
 
 
 RED = (255, 0, 0)
-font = pygame.font.SysFont("comicsans", 50)
+font = pygame.font.Font("Assets/font.ttf", 72)
 
 class Selected:
 
@@ -27,7 +27,7 @@ class Selected:
         )
 
 
-class Choose:
+class Choose(Game):
 
     choice = 0
 
@@ -35,7 +35,7 @@ class Choose:
         
         word = font.render("Choose a map id to edit", True, "black")
 
-        win.fill((255, 255, 255))
+        self.draw_background()
         win.blit(word, (win.get_width()//2 - word.get_width()//2, win.get_height()//2 - word.get_height()//2))
 
         pygame.display.update()
