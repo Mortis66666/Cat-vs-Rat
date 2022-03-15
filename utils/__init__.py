@@ -1,6 +1,5 @@
 import json
 from .assets import load, BG, ICON, TOOLBAR, CURSOR, MUSIC
-from .enums import direction
 
 
 with open("settings.json", "r") as file:
