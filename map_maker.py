@@ -263,7 +263,7 @@ class Maker(Game):
     def handle(self):
         pass
 
-    def handle_event(self, event: pygame.event.Event, run: bool) -> bool:
+    def handle_event(self, event: pygame.event.Event, run: bool, again) -> bool:
         if event.type == pygame.QUIT:
             quit = True
             if self.unsave:
@@ -278,7 +278,7 @@ class Maker(Game):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             self.handle_click()
 
-        return run
+        return run, again
 
 
 
