@@ -237,6 +237,9 @@ class Maker(Game):
             for obj in self.boxes:
                 if (obj.x, obj.y) == (x, y):
                     self.boxes.remove(obj)
+            for obj in self.tomatoes:
+                if (obj.x, obj.y) == (x, y):
+                    self.tomatoes.remove(obj)
 
             try:
                 self.occupied.remove((x, y))
