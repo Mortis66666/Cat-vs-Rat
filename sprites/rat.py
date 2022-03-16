@@ -28,6 +28,9 @@ class Rat(BaseSprite):
     def __str__(self):
         return super().__str__() if self.alive else "Dead"
 
+    def is_alive(self):
+        return self.alive
+
     def kill(self):
         self.alive = False
         self.dead_time = time.time()
