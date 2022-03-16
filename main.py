@@ -32,17 +32,17 @@ class Game:
 
         self.cats = [
             Cat(win, x, y)
-            for x, y in self.load("cats")
+            for x, y in self.load("cats", f)
         ]
 
         self.rats = [
             Rat(win, x, y)
-            for x, y in self.load("rats")
+            for x, y in self.load("rats", f)
         ]
 
         self.boxes = [
             Box(win, x, y)
-            for x, y in self.load("boxes")
+            for x, y in self.load("boxes", f)
         ]
 
         self.last_update = 0
@@ -134,6 +134,19 @@ class Game:
     def handle_click(self):
         pass
 
+    def handle_event(self, event: pygame.event.Event, run: bool) -> bool:
+        if event.type == pygame.QUIT:
+            run = False
+            pygame.quit()
+        
+        elif event.type == pygame.KEYDOWN:
+            self.handle_key()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            self.handle_click()
+
+        return run
+
     def load(self, name: str, f=map_name):
 
         with open(f, "r") as file:
@@ -156,15 +169,7 @@ class Game:
             clock.tick(fps)
 
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-                    pygame.quit()
-                
-                elif event.type == pygame.KEYDOWN:
-                    self.handle_key()
-
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.handle_click()
+                run = self.handle_event(event, run)
 
             if run:
                 self.handle()

@@ -31,6 +31,7 @@ import os
 import argparse
 
 from main import Game, Cat, Rat, Box, win
+from tkinter import messagebox
 from utils import BG, TOOLBAR, CURSOR
 
 
@@ -170,6 +171,7 @@ class Maker(Game):
     def __init__(self, map_id, /):
         self.map_id = map_id
         self.history = []
+        self.unsave = False
         super().__init__(f"maps/map_{map_id}.json")
         
         pygame.display.set_caption(f"map_{map_id}")
@@ -198,18 +200,21 @@ class Maker(Game):
             self.occupied.append((x, y))
 
             pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+            self.unsave = True
 
         elif pressed[pygame.K_c] and (x, y) not in self.occupied:
             self.cats.append(Cat(win, x, y))
             self.occupied.append((x, y))
 
             pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+            self.unsave = True
 
         elif pressed[pygame.K_r] and (x, y) not in self.occupied:
             self.rats.append(Rat(win, x, y))
             self.occupied.append((x, y))
 
             pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+            self.unsave = True
 
         elif pressed[pygame.K_d] or pressed[pygame.K_BACKSPACE] or pressed[pygame.K_DELETE]:
             for obj in self.cats:
@@ -228,6 +233,7 @@ class Maker(Game):
                 pass
 
             pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+            self.unsave = True
 
         elif (pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]) and pressed[pygame.K_s]:
             self.save()
@@ -242,6 +248,24 @@ class Maker(Game):
 
     def handle(self):
         pass
+
+    def handle_event(self, event: pygame.event.Event, run: bool) -> bool:
+        if event.type == pygame.QUIT:
+            quit = True
+            if self.unsave:
+                quit = messagebox.askyesno(message="You have unsaved changes, are you sure you want to quit?")
+            if quit:
+                run = False
+                pygame.quit()
+
+        elif event.type == pygame.KEYDOWN:
+            self.handle_key()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            self.handle_click()
+
+        return run
+
 
 
     def save(self):
@@ -268,6 +292,7 @@ class Maker(Game):
                 indent=4
             )
         pygame.display.set_caption(f"map_{self.map_id} · Saved")
+        self.unsave = False
 
 
 def main():
