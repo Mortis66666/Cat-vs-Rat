@@ -2,6 +2,7 @@ import pygame
 import random
 import json
 import time
+import argparse
 
 from abc import abstractmethod
 from sprites import Cat, Rat, Box, Tomato
@@ -63,7 +64,7 @@ class Game:
                     for obj in self.rats
                 ] if not cat else [
                     (obj.x, obj.y)
-                    for obj in self.cats
+                    for obj in (self.cats + self.tomatoes)
                 ]
             )
 
@@ -196,10 +197,20 @@ class Game:
 
 
 def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--map", nargs="?", const=1, type=int, default=None)
+
+    arg = parser.parse_args().map
+    name = map_name
+
+    if arg:
+        name = f"maps/map_{arg}.json"
+
     countdown = Coundown(win)
     countdown.start()
 
-    game = Game()
+    game = Game(name)
     game.start()
 
 
