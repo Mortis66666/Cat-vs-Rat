@@ -176,7 +176,7 @@ class Maker(Game):
         self.map_id = map_id
         self.history = []
         self.unsave = False
-        super().__init__(f"maps/map_{map_id}.json")
+        super().__init__(f"maps/map_{map_id}.json", False)
         
         pygame.display.set_caption(f"map_{map_id}")
         pygame.mouse.set_visible(False)
