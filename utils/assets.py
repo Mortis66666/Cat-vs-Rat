@@ -17,7 +17,10 @@ BOX = pygame.transform.scale(
     load("Box"),
     (64, 64)
 )
-TOMATO = load("Tomato")
+TOMATO = pygame.transform.scale(
+    load("Tomato"),
+    (64, 64)
+)
 HOLE = load("Hole")
 ICON = pygame.transform.scale(
     load("Cat_Avatar_Rounded"),

@@ -4,7 +4,7 @@ import json
 import time
 
 from abc import abstractmethod
-from sprites import Cat, Rat, Box
+from sprites import Cat, Rat, Box, Tomato
 from sprites.base_sprite import BaseSprite
 from utils.countdown import Coundown
 from utils.enums import sprite
@@ -45,6 +45,11 @@ class Game:
             for x, y in self.load("boxes", f)
         ]
 
+        self.tomatoes = [
+            Tomato(win, x, y)
+            for x, y in self.load("tomatoes", f)
+        ]
+
         self.last_update = 0
 
 
@@ -65,7 +70,7 @@ class Game:
     def draw(self): # the draw function
         self.draw_background()
 
-        lst = self.cats + self.rats + self.boxes
+        lst = self.cats + self.rats + self.boxes + self.tomatoes
 
         for object in lst:
             object.draw()
@@ -122,12 +127,26 @@ class Game:
                     obj.move(self.obstacles(cat=True))
             self.last_update = now
 
-        for cat in self.cats:
-            cat.eat(self.rats)
+        foo = random.randint(0, 1)
+
+        if foo:
+            for cat in self.cats:
+                cat.eat(self.rats)
+            for rat in self.rats:
+                rat.eat(self.tomatoes)
+        else:
+            for rat in self.rats:
+                rat.eat(self.tomatoes)
+            for cat in self.cats:
+                cat.eat(self.rats)
 
         for rat in self.rats:
             if not rat.alive and time.time() - rat.dead_time > rat.disappear_time:
                 self.rats.remove(rat)
+
+        for tomato in self.tomatoes:
+            if tomato.eaten:
+                self.tomatoes.remove(tomato)
 
 
     @abstractmethod

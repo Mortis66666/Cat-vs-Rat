@@ -3,6 +3,7 @@ import time
 import random
 
 from .base_sprite import BaseSprite
+from .tomato import Tomato
 from utils.assets import load
 from utils.enums import sprite
 
@@ -30,3 +31,8 @@ class Rat(BaseSprite):
     def kill(self):
         self.alive = False
         self.dead_time = time.time()
+
+    def eat(self, tomatoes: list[Tomato]):
+        for tomato in tomatoes:
+            if abs(tomato.x - self.x) < 0.5 and abs(tomato.y - self.y) < 0.5:
+                tomato.eat()

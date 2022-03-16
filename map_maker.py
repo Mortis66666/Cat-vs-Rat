@@ -30,8 +30,9 @@ import json
 import os
 import argparse
 
-from main import Game, Cat, Rat, Box, win
+from main import Game, Cat, Rat, Box, Tomato, win
 from tkinter import messagebox
+from sprites.base_sprite import BaseSprite
 from utils import BG, TOOLBAR, CURSOR
 
 
@@ -148,7 +149,10 @@ class Choose:
                                     {
                                         "Boxes": [],
                                         "Cats": [],
-                                        "Rats": []
+                                        "Rats": [],
+                                        "Tomatoes": [],
+                                        "Spikes": [],
+                                        "Holes": []
                                     },
                                     file
                                 )
@@ -216,6 +220,13 @@ class Maker(Game):
             pygame.display.set_caption(f"map_{self.map_id} · Not saved")
             self.unsave = True
 
+        elif pressed[pygame.K_t] and (x, y) not in self.occupied:
+            self.tomatoes.append(Tomato(win, x, y))
+            self.occupied.append((x, y))
+
+            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+            self.unsave = True
+
         elif pressed[pygame.K_d] or pressed[pygame.K_BACKSPACE] or pressed[pygame.K_DELETE]:
             for obj in self.cats:
                 if (obj.x, obj.y) == (x, y):
@@ -238,7 +249,7 @@ class Maker(Game):
         elif (pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]) and pressed[pygame.K_s]:
             self.save()
 
-    def unique(self, seq: list):
+    def unique(self, seq: list) -> list[BaseSprite]:
         res = []
         for pos in seq:
             if pos not in res:
@@ -286,6 +297,11 @@ class Maker(Game):
                         [
                             rat.x, rat.y
                         ] for rat in self.unique(self.rats)
+                    ],
+                    "Tomatoes": [
+                        [
+                            tomato.x, tomato.y
+                        ] for tomato in self.unique(self.tomatoes)
                     ]
                 },
                 file,
