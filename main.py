@@ -9,7 +9,7 @@ from sprites import Cat, Rat, Box, Tomato
 from sprites.base_sprite import BaseSprite
 from utils.countdown import Coundown
 from utils.enums import sprite
-from utils import BG, ICON, MUSIC, map_name
+from utils import BG, ICON, MUSIC, TOOLBAR, map_name
 
 
 pygame.init()
@@ -25,6 +25,14 @@ pygame.display.set_icon(ICON)
 WHITE = (233, 233, 233)
 BLACK = (0, 0, 0)
 
+
+# Events
+CATWIN = pygame.USEREVENT + 1
+RATWIN = pygame.USEREVENT + 2
+
+# Font
+font = pygame.font.Font("Assets/font.ttf", 72)
+smaller_font = pygame.font.Font("Assets/font.ttf", 30)
 
 
 class Game:
@@ -149,12 +157,23 @@ class Game:
             if tomato.eaten:
                 self.tomatoes.remove(tomato)
 
+        if not any(map(Rat.is_alive, self.rats)):
+            pygame.event.post(
+                pygame.event.Event(CATWIN)
+            )
+
+        elif not self.tomatoes:
+            pygame.event.post(
+                pygame.event.Event(RATWIN)
+            )
+
 
     @abstractmethod
     def handle_click(self):
         pass
 
-    def handle_event(self, event: pygame.event.Event, run: bool) -> bool:
+    def handle_event(self, event: pygame.event.Event, run: bool, again: bool = False) -> tuple[bool, bool]:
+        """Handle event here!!!"""
         if event.type == pygame.QUIT:
             run = False
             pygame.quit()
@@ -165,7 +184,75 @@ class Game:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             self.handle_click()
 
-        return run
+        elif event.type in (CATWIN, RATWIN):
+            win_msg = ["CAT", "RAT"][event.type == RATWIN] + " WIN!"
+            go = True
+            while go:
+                for ev in pygame.event.get():
+                    if ev.type == pygame.QUIT:
+                        run = False
+                        go = False
+                        pygame.quit()
+                        break
+                    elif ev.type == pygame.KEYDOWN:
+                        pressed = pygame.key.get_pressed()
+
+                        if pressed[pygame.K_p]:
+                            run = False
+                            again = True
+                            go = False
+
+                        elif pressed[pygame.K_q]:
+                            go = False
+                            again = False
+                            run = False
+                if go:
+                    text = font.render(win_msg, True, "red")
+                    text_2 = smaller_font.render("PLAY AGAIN (P)", True, "red")
+                    text_3 = smaller_font.render("QUIT (Q)", True, "red")
+                    win.blit(   # Cat win!
+                        text,
+                        (
+                            width // 2 - text.get_width() // 2,
+                            height // 2 - text.get_height() // 2 - 200
+                        )                    
+                    )
+
+                    win.blit(
+                        TOOLBAR,  # Toolbar left
+                        (
+                            width // 2 - TOOLBAR.get_width() // 2 - 300,
+                            height // 2 - text.get_height() // 2  
+                        )                 
+                    )
+
+                    win.blit(
+                        TOOLBAR,   # Toolbar right
+                        (
+                            width // 2 - TOOLBAR.get_width() // 2 + 300,
+                            height // 2 - text.get_height() // 2  
+                        )                 
+                    )
+
+                    win.blit(
+                        text_2,    # Play again
+                        (
+                            width // 2 - TOOLBAR.get_width() // 2 - 250,
+                            height // 2 - text_2.get_height() // 2  
+                        )                 
+                    )
+
+                    win.blit(
+                        text_3,   # Quit
+                        (
+                            width // 2 - TOOLBAR.get_width() // 2 + 350,
+                            height // 2 - text_3.get_height() // 2  
+                        )                 
+                    )
+                    
+                    pygame.display.update()
+
+        return run, again
 
     def load(self, name: str, f=map_name):
 
@@ -178,6 +265,7 @@ class Game:
 
         # In game data
         run = True
+        again = None
 
         clock = pygame.time.Clock()
         fps = 60 # Frame per second
@@ -189,7 +277,9 @@ class Game:
             clock.tick(fps)
 
             for event in pygame.event.get():
-                run = self.handle_event(event, run)
+                run, again = self.handle_event(event, run, again)
+                if not run:
+                    return again
 
             if run:
                 self.handle()
@@ -200,18 +290,30 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--map", nargs="?", const=1, type=int, default=None)
+    parser.add_argument("--debug", action=argparse.BooleanOptionalAction)
 
-    arg = parser.parse_args().map
+    args = parser.parse_args()
+
+    arg = args.map
     name = map_name
 
     if arg:
         name = f"maps/map_{arg}.json"
 
-    countdown = Coundown(win)
-    countdown.start()
+    if not parser.parse_args().debug:
+        countdown = Coundown(win)
+        countdown.start()
 
     game = Game(name)
-    game.start()
+    again = game.start()
+
+    while again:
+        if not parser.parse_args().debug:
+            countdown = Coundown(win)
+            countdown.start()
+
+        game = Game(name)
+        again = game.start()
 
 
 if __name__ == "__main__":
