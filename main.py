@@ -37,7 +37,7 @@ smaller_font = pygame.font.Font("Assets/font.ttf", 30)
 
 class Game:
 
-    def __init__(self, f=map_name):
+    def __init__(self, f: str=map_name, sound: bool = True):
 
         self.cats = [
             Cat(win, x, y)
@@ -60,6 +60,7 @@ class Game:
         ]
 
         self.last_update = 0
+        self.sound = sound
 
 
     def obstacles(self, *, cat=False) -> list[BaseSprite]:
@@ -270,8 +271,9 @@ class Game:
         clock = pygame.time.Clock()
         fps = 60 # Frame per second
 
-        pygame.mixer.music.load(MUSIC)
-        pygame.mixer.music.play(-1)
+        if self.sound:
+            pygame.mixer.music.load(MUSIC)
+            pygame.mixer.music.play(-1)
 
         while run:
             clock.tick(fps)
@@ -291,28 +293,31 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--map", nargs="?", const=1, type=int, default=None)
     parser.add_argument("--debug", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--sound", action=argparse.BooleanOptionalAction)
+    parser.set_defaults(sound=True)
 
     args = parser.parse_args()
 
     arg = args.map
     name = map_name
+    sound = args.sound
 
     if arg:
         name = f"maps/map_{arg}.json"
 
     if not parser.parse_args().debug:
-        countdown = Coundown(win)
+        countdown = Coundown(win, sound)
         countdown.start()
 
-    game = Game(name)
+    game = Game(name, sound)
     again = game.start()
 
     while again:
         if not parser.parse_args().debug:
-            countdown = Coundown(win)
+            countdown = Coundown(win, sound)
             countdown.start()
 
-        game = Game(name)
+        game = Game(name, sound)
         again = game.start()
 
 

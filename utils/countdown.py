@@ -9,8 +9,9 @@ font = pygame.font.Font("Assets/font.ttf", 200)
 
 class Coundown:
 
-    def __init__(self, win: pygame.Surface):
+    def __init__(self, win: pygame.Surface, sound: bool):
         self.win = win
+        self.sound = sound
 
     def draw_background(self):
         for x in range(5):
@@ -34,8 +35,9 @@ class Coundown:
 
 
     def start(self):
-        pygame.mixer.music.load(load_music("countdown"))
-        pygame.mixer.music.play()
+        if self.sound:
+            pygame.mixer.music.load(load_music("countdown"))
+            pygame.mixer.music.play()
         for i in range(3, -1, -1):
             if i:
                 self.draw(i)
