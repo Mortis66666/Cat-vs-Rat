@@ -40,7 +40,7 @@ class BaseSprite:
     
     def move(self, obstacles):
 
-        n = 0.2 if self._type == sprite.CAT else 0.5
+        n = 0.2 if self._type == sprite.CAT else 0.4
 
 
         max_up = self.y
