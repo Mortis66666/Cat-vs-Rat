@@ -30,7 +30,7 @@ import json
 import os
 import argparse
 
-from main import Game, Cat, Rat, Box, Tomato, win
+from main import Game, Cat, Rat, Box, Tomato, Hole, win
 from tkinter import messagebox
 from sprites.base_sprite import BaseSprite
 from utils import BG, TOOLBAR, CURSOR
@@ -170,13 +170,20 @@ class Choose:
 class Maker(Game):
 
     selected: Selected | None = None
-    occupied = []
 
     def __init__(self, map_id, /):
         self.map_id = map_id
         self.history = []
         self.unsave = False
         super().__init__(f"maps/map_{map_id}.json", False)
+
+        self.occupied = [
+            (obj.x, obj.y)
+            for obj in (self.cats + self.rats + self.boxes + self.tomatoes + self.holes)
+        ]
+
+        for hole in self.holes:
+            self.occupied.append((hole.x+1, hole.y))
         
         pygame.display.set_caption(f"map_{map_id}")
         pygame.mouse.set_visible(False)
@@ -227,6 +234,14 @@ class Maker(Game):
             pygame.display.set_caption(f"map_{self.map_id} · Not saved")
             self.unsave = True
 
+        elif pressed[pygame.K_h] and (x, y) not in self.occupied and (x+1, y) not in self.occupied and x < 19:
+            self.holes.append(Hole(win, x, y))
+            self.occupied.append((x, y))
+            self.occupied.append((x+1, y))
+
+            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+            self.unsave = True
+
         elif pressed[pygame.K_d] or pressed[pygame.K_BACKSPACE] or pressed[pygame.K_DELETE]:
             for obj in self.cats:
                 if (obj.x, obj.y) == (x, y):
@@ -240,14 +255,29 @@ class Maker(Game):
             for obj in self.tomatoes:
                 if (obj.x, obj.y) == (x, y):
                     self.tomatoes.remove(obj)
+            for obj in self.holes:
+                if (obj.x, obj.y) == (x, y) or (obj.x+1, obj.y) == (x, y):
+                    self.holes.remove(obj)
+                    self.occupied.remove((x+1, y))
 
             try:
                 self.occupied.remove((x, y))
-            except:
+                pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+                self.unsave = True
+            except ValueError:
                 pass
 
-            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
-            self.unsave = True
+        elif pressed[pygame.K_UP] and y:
+            self.selected.y -= 1
+        
+        elif pressed[pygame.K_DOWN] and y < 9:
+            self.selected.y += 1
+
+        elif pressed[pygame.K_LEFT] and x:
+            self.selected.x -= 1
+
+        elif pressed[pygame.K_RIGHT] and x < 19:
+            self.selected.x += 1
 
         elif (pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]) and pressed[pygame.K_s]:
             self.save()
@@ -283,35 +313,47 @@ class Maker(Game):
 
 
     def save(self):
-        with open(f"maps/map_{self.map_id}.json", "w") as file:
-            json.dump(
-                {
-                    "Boxes": [
-                        [
-                            box.x, box.y
-                        ] for box in self.unique(self.boxes)
-                    ],
-                    "Cats": [
-                        [
-                            cat.x, cat.y
-                        ] for cat in self.unique(self.cats)
-                    ],
-                    "Rats": [
-                        [
-                            rat.x, rat.y
-                        ] for rat in self.unique(self.rats)
-                    ],
-                    "Tomatoes": [
-                        [
-                            tomato.x, tomato.y
-                        ] for tomato in self.unique(self.tomatoes)
-                    ]
-                },
-                file,
-                indent=4
-            )
-        pygame.display.set_caption(f"map_{self.map_id} · Saved")
-        self.unsave = False
+        if len(self.holes) == 1:
+            messagebox.showinfo(title="Can't save", message="Must place at least two holes")
+
+        elif len(self.holes) > 2:
+            messagebox.showinfo(title="Can't save", message="Cannot place more than two holes")
+
+        else:
+            with open(f"maps/map_{self.map_id}.json", "w") as file:
+                json.dump(
+                    {
+                        "Boxes": [
+                            [
+                                box.x, box.y
+                            ] for box in self.unique(self.boxes)
+                        ],
+                        "Cats": [
+                            [
+                                cat.x, cat.y
+                            ] for cat in self.unique(self.cats)
+                        ],
+                        "Rats": [
+                            [
+                                rat.x, rat.y
+                            ] for rat in self.unique(self.rats)
+                        ],
+                        "Tomatoes": [
+                            [
+                                tomato.x, tomato.y
+                            ] for tomato in self.unique(self.tomatoes)
+                        ],
+                        "Holes": [
+                            [
+                                hole.x, hole.y
+                            ] for hole in self.unique(self.holes)
+                        ]
+                    },
+                    file,
+                    indent=4
+                )
+            pygame.display.set_caption(f"map_{self.map_id} · Saved")
+            self.unsave = False
 
 
 def main():

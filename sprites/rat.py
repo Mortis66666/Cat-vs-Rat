@@ -12,7 +12,6 @@ class Rat(BaseSprite):
 
     def __init__(self, win: pygame.Surface, x, y):
         super().__init__(win, x, y, sprite.RAT)
-        self.alive = True
         self.dead_time = 0
         self.disappear_time = random.randint(3, 7)
 

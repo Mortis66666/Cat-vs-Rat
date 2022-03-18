@@ -1,6 +1,6 @@
 import pygame
 
-from .base_sprite import BaseSprite
+from utils.assets import HOLE
 
 class Hole:
     
@@ -9,12 +9,5 @@ class Hole:
         self.x = x
         self.y = y
 
-    def occupied(self, objects: list[BaseSprite]) -> bool:
-        for obj in objects:
-            if obj.x == self.x and obj.y == self.y:
-                return True
-
-        return False
-
     def draw(self):
-        pass
+        self.win.blit(HOLE, (self.x*64, self.y*64))

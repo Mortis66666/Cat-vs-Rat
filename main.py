@@ -5,11 +5,12 @@ import time
 import argparse
 
 from abc import abstractmethod
-from sprites import Cat, Rat, Box, Tomato
+from sprites import Cat, Rat, Box, Tomato, Hole, Spike
 from sprites.base_sprite import BaseSprite
 from utils.countdown import Coundown
 from utils.enums import sprite
 from utils import BG, ICON, MUSIC, TOOLBAR, map_name
+from utils.exceptions import CantTeleportError
 
 
 pygame.init()
@@ -59,6 +60,11 @@ class Game:
             for x, y in self.load("tomatoes", f)
         ]
 
+        self.holes = [
+            Hole(win, x, y)
+            for x, y in self.load("holes", f)
+        ]
+
         self.last_update = 0
         self.sound = sound
 
@@ -80,7 +86,7 @@ class Game:
     def draw(self): # the draw function
         self.draw_background()
 
-        lst = self.cats + self.rats + self.boxes + self.tomatoes
+        lst = self.holes + self.cats + self.rats + self.boxes + self.tomatoes
 
         for object in lst:
             object.draw()
@@ -105,6 +111,8 @@ class Game:
 
 
     def handle(self):
+
+        # Move / teleport
         pressed = pygame.key.get_pressed()
 
         cat = False
@@ -130,15 +138,35 @@ class Game:
 
         if now - 0.05 > self.last_update:
             for obj in lst:
+                obstacles = None
+
                 if obj._type == sprite.RAT:
                     if obj.alive:
-                        obj.move(self.obstacles())
+                        obstacles = self.obstacles()
+                        obj.move(obstacles)
                 else:
-                    obj.move(self.obstacles(cat=True))
+                    obstacles = self.obstacles(cat=True)
+                    obj.move(obstacles)
+
+                if obj.alive and self.holes:
+                    hole_1, hole_2 = self.holes
+
+                    if abs(obj.x - hole_1.x) < 1 and abs(obj.y - hole_1.y) < 1:
+                        try:
+                            obj.teleport(hole_2, obstacles)
+                        except CantTeleportError:
+                            pass
+                    elif abs(obj.x - hole_2.x) < 1 and abs(obj.y - hole_2.y) < 1:
+                        try:
+                            obj.teleport(hole_1, obstacles)
+                        except CantTeleportError:
+                            pass
+
             self.last_update = now
 
         foo = random.randint(0, 1)
 
+        # Cat eat rat / Rat eat tomato
         if foo:
             for cat in self.cats:
                 cat.eat(self.rats)
@@ -150,14 +178,17 @@ class Game:
             for cat in self.cats:
                 cat.eat(self.rats)
 
+        # Remove dead rats if times up
         for rat in self.rats:
             if not rat.alive and time.time() - rat.dead_time > rat.disappear_time:
                 self.rats.remove(rat)
 
+        # Remove eaten tomato
         for tomato in self.tomatoes:
             if tomato.eaten:
                 self.tomatoes.remove(tomato)
 
+        # Check if anyone won
         if not any(map(Rat.is_alive, self.rats)):
             pygame.event.post(
                 pygame.event.Event(CATWIN)

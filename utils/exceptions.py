@@ -1,0 +1,2 @@
+class CantTeleportError(Exception):
+    pass

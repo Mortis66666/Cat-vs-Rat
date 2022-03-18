@@ -1,6 +1,9 @@
 import pygame
-from utils.enums import direction, sprite
+import time
+
 from abc import abstractproperty
+from utils.enums import direction, sprite
+from utils.exceptions import CantTeleportError
 
 class BaseSprite:
 
@@ -11,6 +14,9 @@ class BaseSprite:
 
         self.facing = direction.DOWN
         self._type = _type
+
+        self.last_teleport = 0
+        self.alive = True
 
 
     @abstractproperty
@@ -25,6 +31,11 @@ class BaseSprite:
 
     def draw(self):
         self.win.blit(self.image, (self.x*64, self.y*64))
+
+
+    def move_to(self, x: int, y: int):
+        self.x = x
+        self.y = y
 
     
     def move(self, obstacles):
@@ -96,3 +107,27 @@ class BaseSprite:
 
             elif pressed[pygame.K_d]:
                 self.facing = direction.RIGHT
+
+
+    def teleport(self, other_hole, obstacles: list):
+
+        now = time.time()
+
+        if now - self.last_teleport > 2:
+            possible = [(other_hole.x, other_hole.y), (other_hole.x + 1, other_hole.y)]
+            
+            for obs in obstacles:
+                for pos in possible:
+                    if abs(pos[0] - obs[0]) < 1 and abs(pos[0] - obs[1]) < 1:
+                        possible.remove(pos)
+
+                if not pos:
+                    raise CantTeleportError
+            
+            go = possible[0]
+
+            self.move_to(*go)
+            self.last_teleport = now
+
+        else:
+            raise CantTeleportError
