@@ -151,12 +151,12 @@ class Game:
                 if obj.alive and self.holes:
                     hole_1, hole_2 = self.holes
 
-                    if abs(obj.x - hole_1.x) < 1 and abs(obj.y - hole_1.y) < 1:
+                    if (abs(obj.x - hole_1.x) < 1 and abs(obj.y - hole_1.y) < 1) or (abs(obj.x - (hole_1.x + 1)) < 1 and abs(obj.y - hole_1.y) < 1):
                         try:
                             obj.teleport(hole_2, obstacles)
                         except CantTeleportError:
                             pass
-                    elif abs(obj.x - hole_2.x) < 1 and abs(obj.y - hole_2.y) < 1:
+                    elif (abs(obj.x - hole_2.x) < 1 and abs(obj.y - hole_2.y) < 1) or (abs(obj.x - (hole_2.x + 1)) < 1 and abs(obj.y - hole_2.y) < 1):
                         try:
                             obj.teleport(hole_1, obstacles)
                         except CantTeleportError:
