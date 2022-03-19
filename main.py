@@ -8,7 +8,7 @@ from abc import abstractmethod
 from sprites import Cat, Rat, Box, Tomato, Hole, Spike
 from sprites.base_sprite import BaseSprite
 from utils.countdown import Coundown
-from utils.enums import sprite
+from utils.enums import spiky, sprite
 from utils import BG, ICON, MUSIC, TOOLBAR, map_name
 from utils.exceptions import CantTeleportError
 
@@ -65,7 +65,13 @@ class Game:
             for x, y in self.load("holes", f)
         ]
 
+        self.spikes = [
+            Spike(win, x, y)
+            for x, y in self.load("spikes", f)
+        ]
+
         self.last_update = 0
+        self.spike_last_update = 0
         self.sound = sound
 
 
@@ -81,12 +87,17 @@ class Game:
                     (obj.x, obj.y)
                     for obj in (self.cats + self.tomatoes)
                 ]
+            ) + (
+                [
+                    (spike.x, spike.y)
+                    for spike in self.spikes
+                ] if self.spikes and any([spike.form is spiky.ACTIVE for spike in self.spikes]) else []
             )
 
     def draw(self): # the draw function
         self.draw_background()
 
-        lst = self.holes + self.cats + self.rats + self.boxes + self.tomatoes
+        lst = self.holes + self.cats + self.rats + self.boxes + self.tomatoes + self.spikes
 
         for object in lst:
             object.draw()
@@ -187,6 +198,12 @@ class Game:
         for tomato in self.tomatoes:
             if tomato.eaten:
                 self.tomatoes.remove(tomato)
+
+        # Spike update
+        if now - self.spike_last_update > 1:
+            for spike in self.spikes:
+                spike.change_form()
+            self.spike_last_update = now
 
         # Check if anyone won
         if not any(map(Rat.is_alive, self.rats)):

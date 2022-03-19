@@ -30,7 +30,7 @@ import json
 import os
 import argparse
 
-from main import Game, Cat, Rat, Box, Tomato, Hole, win
+from main import Game, Cat, Rat, Box, Tomato, Hole, Spike, win
 from tkinter import messagebox
 from sprites.base_sprite import BaseSprite
 from utils import BG, TOOLBAR, CURSOR
@@ -255,6 +255,9 @@ class Maker(Game):
             for obj in self.tomatoes:
                 if (obj.x, obj.y) == (x, y):
                     self.tomatoes.remove(obj)
+            for obj in self.spikes:
+                if (obj.x, obj.y) == (x, y):
+                    self.spikes.remove(obj)
             for obj in self.holes:
                 if (obj.x, obj.y) == (x, y) or (obj.x+1, obj.y) == (x, y):
                     self.holes.remove(obj)
@@ -281,6 +284,14 @@ class Maker(Game):
 
         elif (pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]) and pressed[pygame.K_s]:
             self.save()
+
+        elif (pressed[pygame.K_s]) and (x, y) not in self.occupied:
+            self.spikes.append(Spike(win, x, y))
+            self.occupied.append((x, y))
+
+            pygame.display.set_caption(f"map_{self.map_id} · Not saved")
+            self.unsave = True
+
 
     def unique(self, seq: list) -> list[BaseSprite]:
         res = []
@@ -347,6 +358,11 @@ class Maker(Game):
                             [
                                 hole.x, hole.y
                             ] for hole in self.unique(self.holes)
+                        ],
+                        "Spikes": [
+                            [
+                                spike.x, spike.y
+                            ] for spike in self.spikes
                         ]
                     },
                     file,

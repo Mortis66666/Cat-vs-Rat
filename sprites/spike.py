@@ -1,5 +1,4 @@
 import pygame
-import random
 
 from utils.assets import load
 from utils.enums import spiky
@@ -12,17 +11,16 @@ class Spike:
         self.x = x
         self.y = y
 
-        self.change_form()
+        self.form = spiky.ACTIVE
 
     def change_form(self):
-        self.form = random.choice(
-            spiky.ACTIVE,
-            spiky.INACTIVE
-        )
+        self.form = spiky.INACTIVE if self.form == spiky.ACTIVE else spiky.ACTIVE
+
+        return self
 
     @property
     def image(self):
-        return load("Spikes" + ["", "_Active"][self.form == spiky.ACTIVE])
+        return pygame.transform.scale(load("Spikes" + ["", "_Active"][self.form == spiky.ACTIVE]), (64, 64))
 
     def draw(self):
         self.win.blit(self.image, (self.x*64, self.y*64))
