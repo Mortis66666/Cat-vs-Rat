@@ -259,9 +259,13 @@ class Maker(Game):
                 if (obj.x, obj.y) == (x, y):
                     self.spikes.remove(obj)
             for obj in self.holes:
-                if (obj.x, obj.y) == (x, y) or (obj.x+1, obj.y) == (x, y):
+                if (obj.x, obj.y) == (x, y):
                     self.holes.remove(obj)
                     self.occupied.remove((x+1, y))
+                elif (obj.x+1, obj.y) == (x, y):
+                    self.holes.remove(obj)
+                    self.occupied.remove((x-1, y))
+
 
             try:
                 self.occupied.remove((x, y))
