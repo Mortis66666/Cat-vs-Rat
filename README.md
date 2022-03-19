@@ -1,3 +1,4 @@
+![](Assets/Cat_Avatar_Rounded.png)
 # Cat vs Rat
 
 ## Requirements:
