@@ -73,6 +73,7 @@ class Game:
         self.last_update = 0
         self.spike_last_update = 0
         self.sound = sound
+        self.start_time = 0
 
 
     def obstacles(self, *, cat=False) -> list[BaseSprite]:
@@ -205,6 +206,17 @@ class Game:
                 spike.change_form()
             self.spike_last_update = now
 
+        # Remove a cat every 30 seconds
+        if now - self.start_time > 30:
+            self.start_time += 30
+            try:
+                print(len(self.cats))
+                self.cats.remove(random.choice(self.cats))
+            except IndexError:
+                pass
+            except ValueError:
+                pass
+
         # Check if anyone won
         if not any(map(Rat.is_alive, self.rats)):
             pygame.event.post(
@@ -315,6 +327,7 @@ class Game:
         # In game data
         run = True
         again = None
+        self.start_time = time.time()
 
         clock = pygame.time.Clock()
         fps = 60 # Frame per second
