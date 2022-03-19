@@ -210,7 +210,6 @@ class Game:
         if now - self.start_time > 30:
             self.start_time += 30
             try:
-                print(len(self.cats))
                 self.cats.remove(random.choice(self.cats))
             except IndexError:
                 pass
