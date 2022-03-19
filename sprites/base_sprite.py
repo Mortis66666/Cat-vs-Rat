@@ -121,7 +121,7 @@ class BaseSprite:
                     if abs(pos[0] - obs[0]) < 1 and abs(pos[0] - obs[1]) < 1:
                         possible.remove(pos)
 
-                if not pos:
+                if not possible:
                     raise CantTeleportError
             
             go = possible[0]
