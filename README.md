@@ -63,6 +63,6 @@ Map: The map you want to play
 * **Attributes:** When active, sprites can't walk pass through it, the form will change every 2 seconds
 
 # More:
-**[Asset source](https://comigo.itch.io/farm-puzzle-animals)**
+**[Asset source](https://comigo.itch.io/farm-puzzle-animals)**\
 **[Download zip](https://file.io/XNGtkTY3JYhF)**
 
