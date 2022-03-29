@@ -4,7 +4,7 @@
 ## Requirements:
 * Python 3.10 or higher
 * pygame 2.1.2 or higher
-> If your python version is not so high, you can change all the match case statements to if else statements
+> If your python version is not so high, you can change all the match case statements to if else statements or you can install the exe zip folder (scroll down)
 
 
 ## How to run
@@ -29,8 +29,6 @@ Arguments:
 [--map [MAP]]
 ```
 Map: The map you want to play
-
-> Will provide exe file in the future
 
 ## How to play
 ### Cat:
@@ -65,5 +63,6 @@ Map: The map you want to play
 * **Attributes:** When active, sprites can't walk pass through it, the form will change every 2 seconds
 
 # More:
-## **[Asset source](https://comigo.itch.io/farm-puzzle-animals)**
+**[Asset source](https://comigo.itch.io/farm-puzzle-animals)**
+**[Download zip](https://file.io/XNGtkTY3JYhF)**
 
